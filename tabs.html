@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SPARSH - Braille Web App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0f0f 10%, #4b0082 40%, #008cff 70%, #ff6a00 100%);
+      color: white;
+      padding: 30px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      background-color: black;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 36px;
+      color: white;
+      margin-bottom: 40px;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: white;
+      text-shadow: 0 0 3px rgba(255, 165, 0, 0.5); /* orange glow */
+    }
+
+    .section {
+      margin-bottom: 40px;
+      padding: 25px;
+      background: rgba(0, 0, 0, 0.65);
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(255, 102, 0, 0.4); /* more orange glow */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 18px rgba(255, 140, 0, 0.6);
+    }
+
+    textarea, input[type=text] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #1e1e1e;
+      color: white;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #ff8c00, #ff5e00, #ff9800); /* strong orange gradient */
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(255, 120, 0, 0.6);
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    a {
+      color: #ffa500;
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: #ffd280;
+    }
+
+    p {
+      margin-top: 10px;
+      color: #f0f0f0;
+      text-shadow: 0 0 2px rgba(255, 255, 255, 0.1); /* much subtler glow */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>SPARSH - Braille Support Platform</h1>
+
+  <div class="section">
+    <h2>Text to Braille</h2>
+    <textarea id="textInput" placeholder="Enter text here..."></textarea>
+    <button onclick="convertToBraille()">Convert to Braille</button>
+    <p><strong>Braille Output:</strong></p>
+    <p id="brailleOutput"></p>
+  </div>
+
+  <div class="section">
+    <h2>Voice to Braille</h2>
+    <button onclick="startRecognition()">Start Speaking</button>
+    <p><strong>Recognized Text:</strong></p>
+    <p id="recognizedText"></p>
+    <p><strong>Braille Output:</strong></p>
+    <p id="voiceBrailleOutput"></p>
+  </div>
+
+  <div class="section">
+    <h2>Community Support</h2>
+    <p>Need help or support? Call our helpline or join our support group.</p>
+    <ul>
+      <li>📞 Support Helpline: 1800-123-456</li>
+      <li>💬 WhatsApp Group: <a href="https://chat.whatsapp.com/FCgwwV0aYdkHb4LUTiZWj2" target="_blank">Join Now</a></li>
+      <li>📧 Email: support@sparsh.org</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Learn Braille (For Teachers)</h2>
+    <p>Access lessons and guides designed to help teachers support blind students:</p>
+    <ul>
+      <li><a href="#">Lesson 1: Introduction to Braille</a></li>
+      <li><a href="#">Lesson 2: Braille Alphabet</a></li>
+      <li><a href="#">Lesson 3: Numbers and Punctuation</a></li>
+      <li><a href="#">Download Braille Teaching Manual (PDF)</a></li>
+    </ul>
+  </div>
+
+  <script>
+    const brailleMap = {
+      'a': '⠁', 'b': '⠃', 'c': '⠉', 'd': '⠙', 'e': '⠑', 'f': '⠋', 'g': '⠛', 'h': '⠓', 'i': '⠊', 'j': '⠚',
+      'k': '⠅', 'l': '⠇', 'm': '⠍', 'n': '⠝', 'o': '⠕', 'p': '⠏', 'q': '⠟', 'r': '⠗', 's': '⠎', 't': '⠞',
+      'u': '⠥', 'v': '⠧', 'w': '⠺', 'x': '⠭', 'y': '⠽', 'z': '⠵', ' ': ' '
+    };
+
+    function convertToBraille() {
+      const text = document.getElementById("textInput").value.toLowerCase();
+      let braille = "";
+      for (let char of text) {
+        braille += brailleMap[char] || '?';
+      }
+      document.getElementById("brailleOutput").textContent = braille;
+    }
+
+    function convertVoiceToBraille(text) {
+      const lowerText = text.toLowerCase();
+      let braille = "";
+      for (let char of lowerText) {
+        braille += brailleMap[char] || '?';
+      }
+      document.getElementById("voiceBrailleOutput").textContent = braille;
+    }
+
+    function startRecognition() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+
+      recognition.onresult = (event) => {
+        const text = event.results[0][0].transcript;
+        document.getElementById("recognizedText").textContent = text;
+        convertVoiceToBraille(text);
+      };
+
+      recognition.onerror = (event) => {
+        alert("Speech recognition error: " + event.error);
+      };
+    }
+  </script>
+</body>
+</html>

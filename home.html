@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SPARSH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('background1.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      height: 80px;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+    }
+    .logo { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: 2px; }
+    .nav-buttons {
+      display: flex;
+      gap: 30px;
+      margin-right: 40px;
+    }
+    .nav-buttons button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      padding: 8px 0;
+      cursor: pointer;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .nav-buttons button:hover {
+      text-shadow: 0 0 5px #f0f, 0 0 10px #0ff, 0 0 15px #f57001;
+    }
+    .nav-buttons button::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #f0f, #0ff, #f57001);
+      box-shadow: 0 0 5px #fff;
+      transition: transform 0.4s ease;
+      transform-origin: center;
+    }
+    .nav-buttons button:hover::after {
+      transform: translateX(-50%) scaleX(1);
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding-right: 10px;
+    }
+    .hamburger span {
+      width: 25px;
+      height: 3px;
+      background: white;
+      border-radius: 2px;
+    }
+    @media (max-width: 768px) {
+      .nav-buttons {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background-color: #111;
+        display: none;
+        align-items: center;
+        padding: 15px 0;
+        gap: 20px;
+      }
+      .nav-buttons.show {
+        display: flex;
+      }
+      .hamburger {
+        display: flex;
+      }
+    }
+    .content {
+      padding-top: 100px;
+      text-align: center;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .section {
+      padding: 60px 20px;
+    }
+    .section h2 {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+    .section p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #eee;
+    }
+    .features {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 60px 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+    .feature {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.2);
+      opacity: 0;
+      transform: translateY(50px);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+    .feature.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .feature:hover {
+      transform: scale(1.05);
+    }
+    .feature h3 {
+      color: #0ff;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+    .feature:hover h3 {
+      text-shadow: 0 0 10px #0ff, 0 0 15px #0ff;
+    }
+
+    .voice-btn {
+      background-color: #0ff;
+      color: #000;
+      border: none;
+      padding: 12px 25px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-top: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .voice-btn:hover {
+      background-color: #00c6c6;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">SPARSH</div>
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="nav-buttons" id="navMenu">
+      <button onclick="goToTabs()">Community</button>
+      <button onclick="goToTabs()">Text to Braille</button>
+      <button onclick="goToTabs()">Audio to Braille</button>
+      <button onclick="goToTabs()">Learn Braille</button>
+    </div>
+  </header>
+
+  <div class="content">
+    <section class="section hero">
+      <h2>Welcome to SPARSH</h2>
+      <p>Empowering visually impaired individuals to read and learn using smart Braille technology.</p>
+      <button class="voice-btn" onclick="startVoiceFlow()">🎤 Start Voice Command</button>
+    </section>
+
+    <section class="section">
+      <h2>What You Can Do</h2>
+      <div class="features">
+        <div class="feature"><h3>Text to Braille</h3><p>Convert written text into Braille using our smart display system.</p></div>
+        <div class="feature"><h3>Audio to Braille</h3><p>Transform spoken words into Braille instantly.</p></div>
+        <div class="feature"><h3>Learn Braille</h3><p>Interactive lessons to learn Braille from basics to advanced level.</p></div>
+        <div class="feature"><h3>Join the Community</h3><p>Collaborate, share, and support others in accessibility tech.</p></div>
+        <div class="feature"><h3>Read E-books in Braille</h3><p>Enjoy digital books through our dynamic Braille display.</p></div>
+        <div class="feature"><h3>Community Support</h3><p>Engage with mentors and support groups on your journey.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>About SPARSH</h2>
+      <p>SPARSH is a Smart Braille E-book Reader that converts digital text into Braille and integrates with a mobile app for book selection.</p>
+    </section>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('navMenu').classList.toggle('show');
+    }
+
+    function goToTabs() {
+      window.location.href = 'tabs.html';
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.feature').forEach(feature => {
+      observer.observe(feature);
+    });
+
+    function startVoiceFlow() {
+      speakOptions();
+    }
+
+    function speakOptions() {
+      const options = [
+        "Community Support",
+        "Text to Braille",
+        "Audio to Braille",
+        "Learn Braille",
+        "Read E-books"
+      ];
+      const msg = new SpeechSynthesisUtterance(
+        `Welcome to Sparsh. You can say: ${options.join(", ")}. Please say your choice after the beep.`
+      );
+      msg.onend = () => {
+        listenForCommand();
+      };
+      speechSynthesis.speak(msg);
+    }
+
+    function listenForCommand() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onresult = () => {
+        window.location.href = 'tabs.html';
+      };
+
+      recognition.onerror = (event) => {
+        alert("Speech recognition error: " + event.error);
+      };
+
+      recognition.start();
+    }
+  </script>
+</body>
+</html>

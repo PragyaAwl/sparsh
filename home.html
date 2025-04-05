@@ -27,7 +27,7 @@
       z-index: 1000;
       box-shadow: 0 2px 5px rgba(255,255,255,0.1);
     }
-    .logo { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: 2px; }
+    .logo { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: 2px; text-shadow: 0 0 5px #f0f, 0 0 10px #0ff, 0 0 15px #f57001;}
     .nav-buttons {
       display: flex;
       gap: 30px;
@@ -148,17 +148,67 @@
     }
 
     .voice-btn {
-      background-color: #0ff;
-      color: #000;
+      background: linear-gradient(135deg, #F57001, #ffffff, #6a0dad);
+      color: #fff;
       border: none;
-      padding: 12px 25px;
+      padding: 14px 28px;
       font-size: 18px;
       font-weight: bold;
-      border-radius: 8px;
-      margin-top: 30px;
+      border-radius: 50px;
+      margin-top: 40px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+      animation: waveGlow 3s infinite ease-in-out;
+      box-shadow:
+        inset 0 0 50px #fff,
+        inset 10px 0 40px #F57001,
+        inset -10px 0 40px #D16005,
+        inset 10px 0 200px #f0f,
+        inset -10px 0 200px #122051,
+        0 0 50px #fff,
+        -5px 0 50px #f0f,
+        5px 0 50px #0ff;
     }
+
+    @keyframes waveGlow {
+      0% {
+        box-shadow:
+          inset 0 0 50px #fff,
+          inset 20px 0 80px #F57001,
+          inset -20px 0 80px #D16005,
+          inset 20px 0 300px #f0f,
+          inset -20px 0 300px #122051,
+          0 0 50px #fff,
+          -10px 0 80px #f0f,
+          10px 0 80px #0ff;
+        transform: scale(1);
+      }
+      50% {
+        box-shadow:
+          inset 0 0 60px #fff,
+          inset 25px 0 100px #F57001,
+          inset -25px 0 100px #D16005,
+          inset 25px 0 320px #f0f,
+          inset -25px 0 320px #122051,
+          0 0 60px #fff,
+          -12px 0 100px #f0f,
+          12px 0 100px #0ff;
+        transform: scale(1.05);
+      }
+      100% {
+        box-shadow:
+          inset 0 0 50px #fff,
+          inset 20px 0 80px #F57001,
+          inset -20px 0 80px #D16005,
+          inset 20px 0 300px #f0f,
+          inset -20px 0 300px #122051,
+          0 0 50px #fff,
+          -10px 0 80px #f0f,
+          10px 0 80px #0ff;
+        transform: scale(1);
+      }
+    }
+
     .voice-btn:hover {
       background-color: #00c6c6;
     }
@@ -172,10 +222,10 @@
       <span></span><span></span><span></span>
     </div>
     <div class="nav-buttons" id="navMenu">
-      <button onclick="goToTabs()">Community</button>
-      <button onclick="goToTabs()">Text to Braille</button>
-      <button onclick="goToTabs()">Audio to Braille</button>
-      <button onclick="goToTabs()">Learn Braille</button>
+      <a href="community.html"><button>Community</button></a>
+      <a href="ttb.html"><button>Text to Braille</button></a>
+      <a href="atb.html"><button>Audio to Braille</button></a>
+      <a href="learn.html"><button>Learn Braille</button></a>
     </div>
   </header>
 
@@ -234,8 +284,7 @@
         "Community Support",
         "Text to Braille",
         "Audio to Braille",
-        "Learn Braille",
-        "Read E-books"
+        "Learn Braille"
       ];
       const msg = new SpeechSynthesisUtterance(
         `Welcome to Sparsh. You can say: ${options.join(", ")}. Please say your choice after the beep.`
@@ -248,20 +297,48 @@
 
     function listenForCommand() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        alert("Your browser does not support speech recognition.");
+        return;
+      }
+
       const recognition = new SpeechRecognition();
       recognition.lang = 'en-US';
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
+      recognition.continuous = false;  // Set to false if you want to stop after one command
+      recognition.interimResults = false; // Set to true if you want to get intermediate results
 
-      recognition.onresult = () => {
-        window.location.href = 'tabs.html';
+      recognition.start();
+
+      recognition.onresult = function (event) {
+        const command = event.results[0][0].transcript.toLowerCase();
+        console.log("Voice Command:", command);
+        
+        if (command.includes("text to braille")) {
+          window.location.href = 'ttb.html';
+        } else if (command.includes("community")) {
+          window.location.href = 'community.html';
+        } else if (command.includes("learn braille")) {
+          window.location.href = 'learn-braille.html';
+        } else if (command.includes("audio to braille")) {
+          window.location.href = 'atb.html';
+        } else {
+          alert("Command not recognized.");
+        }
       };
 
-      recognition.onerror = (event) => {
+      recognition.onerror = function (event) {
+        console.error("Speech recognition error:", event.error);
         alert("Speech recognition error: " + event.error);
       };
 
-      recognition.start();
+      recognition.onspeechend = function () {
+        recognition.stop();
+      };
+
+      recognition.onnomatch = function () {
+        alert("Sorry, I didn't hear any recognizable command.");
+      };
     }
   </script>
 </body>
